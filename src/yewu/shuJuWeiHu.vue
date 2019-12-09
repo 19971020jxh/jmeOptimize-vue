@@ -6,14 +6,17 @@
       <el-col :span="18">
         <h3 style="margin-left: 15px">分组数据</h3>
         <el-form :inline="true" :model="nowSelect"  style="margin-left: 45px">
+          <el-form-item v-if="false" >
+            <el-input   v-model.number="nowSelect.id"  ></el-input>
+          </el-form-item>
           <el-form-item label="水头">
-            <el-input v-model="nowSelect.shuitou"  ></el-input>
+            <el-input id="oneInput" v-model.number="nowSelect.shuitou"  ></el-input>
           </el-form-item>
           <el-form-item label="出力">
-            <el-input v-model="nowSelect.chuli"  ></el-input>
+            <el-input v-model.number="nowSelect.chuli"  ></el-input>
           </el-form-item>
           <el-form-item label="流量">
-            <el-input v-model="nowSelect.liuLiang"  ></el-input>
+            <el-input v-model.number="nowSelect.liuLiang"  ></el-input>
           </el-form-item>
         </el-form>
         <h3 style="margin-left: 15px"> 全部数据</h3>
@@ -57,14 +60,17 @@
           </el-radio-group>
         </el-card>
         <el-card class="box-card" style="margin-top: 15px;text-align: center">
-          <el-button  size="medium" type="primary" style="margin-bottom: 5px;">新增</el-button><br/>
-          <el-button  size="medium" type="success" style="margin-bottom: 5px;">修改</el-button><br/>
-          <el-button  size="medium" type="info" style="margin-bottom: 5px;">删除</el-button><br/>
-          <el-button  size="medium" type="warning" style="margin-bottom: 5px;">刷新</el-button><br/>
+          <el-button  @click="add" size="medium" :type="addColor" style="margin-bottom: 5px;">{{addName}}</el-button><br/>
+          <el-button  @click="update" size="medium" :type="updateColor" style="margin-bottom: 5px;">{{updateName}}</el-button><br/>
+          <el-button  @click="dalete" size="medium" :type="deleteColor" style="margin-bottom: 5px;">{{deleteName}}</el-button><br/>
+          <el-button  @click="()=>{this.init();this.$message('刷新成功!');}" size="medium" type="warning" style="margin-bottom: 5px;">刷新</el-button><br/>
         </el-card>
       </el-col>
     </el-row>
     </div>
+
+
+
   </div>
 </template>
 
@@ -77,7 +83,14 @@
             JiQis:[],
             data:[],
             jiqi:"",
-            rowHeight:40
+            rowHeight:40,
+            addNumber:0,
+            addName:'新增',
+            addColor:'primary',
+            updateName:'修改',
+            updateColor:'success',
+            deleteColor:'info',
+            deleteName:'删除',
           }
       },
       created(){
@@ -86,7 +99,56 @@
       methods:{
         init(){
          this.jiQis();
-         this.rowHeight=document.getElementsByClassName('el-table__row')[0].clientHeight+0.2;
+        },
+        delete(){
+          this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.getDelete();
+          })
+        },
+        getDelete(){
+          this.$axios({
+            method:'get',
+            url:'/getUpdate',
+            params:this.nowSelect,
+          }).then(response=>{
+            this.$message('删除成功');
+            this.data.splice(this.data.indexOf(this.nowSelect),1);
+          })
+        },
+        update(){
+          if(this.validate()){
+            return;
+          }
+          this.getUpdate();
+        },
+        getUpdate(){
+          this.$axios({
+            method:'get',
+            url:'/getUpdate',
+            params:this.nowSelect,
+          }).then(response=>{
+            this.$message('修改成功');
+            this.data[this.data.indexOf(response.data.old)]=this.nowSelect;
+          });
+        },
+        add(){
+          if(this.addNumber==0){
+            this.nowSelect={};
+            this.addName='确定'
+            this.addColor='danger'
+            this.addNumber=1;
+            document.getElementById('oneInput').focus();
+          }else{
+            if(this.validate()){
+              return;
+            }
+            this.getAdd();
+            this.addNumber=0;
+          }
         },
         jiQis(){
           this.$axios({
@@ -96,6 +158,32 @@
             this.JiQis=response.data.jiQis;
             this.getData(this.JiQis[0]);
           });
+        },
+        validate(){
+          if (this.nowSelect.shuitou ==undefined && this.nowSelect.chuli ==undefined && this.nowSelect.liuLiang ==undefined){
+            this.$message('必须有一个不为空!'); return true;
+          }
+          if(this.nowSelect.shuitou.trim()=='' && this.nowSelect.chuli.trim()=='' && this.nowSelect.liuLiang.trim()==''  ){
+            this.$message('必须有一个不为空!');return true;
+          }
+          if(/^[0-9]*$/.test(this.nowSelect.shuitou.trim()) && /^[0-9]*$/.test(this.nowSelect.chuli.trim())   &&  /^[0-9]*$/.test(this.nowSelect.liuLiang.trim().trim())  ){
+            this.$message('输入不合法!');return true;
+          }
+          return  false;
+        },
+        getAdd(){
+          this.$axios({
+            method:'get',
+            url:'/addData',
+            params: this.nowSelect,
+          }).then(response=>{
+            this.$message('添加成功!');
+            this.getData(this.jiqi);
+            this.addColor='primary';
+            this.addName='新增';
+            this.nowSelect={};
+            this.$refs.table.bodyWrapper.scrollTop=this.$refs.table.bodyWrapper.scrollHeight;
+          })
         },
         getData(jiqi){
           this.$axios({
@@ -109,15 +197,19 @@
             this.data=response.data.data;
             this.$refs.table.bodyWrapper.scrollTop=0;
             this.nowSelect={};
+            setTimeout(()=>{
+              this.rowHeight=document.getElementsByClassName('el-table__row')[0].clientHeight+0.2;
+            },500)
           });
         },
         rowClick(row){
           this.nowSelect=row;
+          this.rowHeight=document.getElementsByClassName('el-table__row')[0].clientHeight+0.2;
         },
         nextRow(){
           this.$refs.table.setCurrentRow(this.data[this.data.indexOf(this.nowSelect)-1]);
           let h=this.$refs.table.bodyWrapper.scrollTop;
-          if((h/this.rowHeight)>this.data.indexOf(this.nowSelect)-1  ){
+          if((h/this.rowHeight)>this.data.indexOf(this.nowSelect)-1){
             this.$refs.table.bodyWrapper.scrollTop=h-((h/this.rowHeight)-this.data.indexOf(this.nowSelect)+1)*this.rowHeight;
           }
         },
