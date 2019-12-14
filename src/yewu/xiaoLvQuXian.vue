@@ -79,7 +79,6 @@
                   });
                 }
               }
-
             }
             console.log(this.data)
             this.drawLine();
@@ -87,25 +86,23 @@
         },
         drawLine() {
 
+
           // 基于准备好的dom，初始化echarts实例
           let myChart = this.$echarts.init(document.getElementById('myChart'))
           // 绘制图表
           myChart.setOption({
-            // title: {
-            //   text: '机组效率曲线'
-            // },
             tooltip: {
               formatter: function (params) {
                 var data = params.data || [0, 0];
                 return data[0].toFixed(2) + ', ' + data[1].toFixed(2);
               }
             },
-            // grid: {
-            //   left: '3%',
-            //   right: '4%',
-            //   bottom: '3%',
-            //   containLabel: true
-            // },
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+            },
             xAxis: {
               type: 'value',
               axisLine: {onZero: false},
@@ -113,7 +110,6 @@
               maxInterval:1
             },
             yAxis: {
-
               type: 'value',
               axisLine: {onZero: true},
               min:73,
