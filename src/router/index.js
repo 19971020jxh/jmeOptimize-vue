@@ -10,7 +10,7 @@ import gongLvJiSuan from '@/yewu/gongLvJiSuan'
 import youHua from '@/yewu/youHua'
 Vue.use(Router)
 
-export default new Router({
+const router= new Router({
   routes: [
     {
       path: '/login',
@@ -54,3 +54,21 @@ export default new Router({
     },
   ]
 })
+
+// router.beforeEach((to,from,next)=>{
+//   console.log(to)
+//   if(to.name!='login'){
+//      if(sessionStorage.getItem("login")!="T"){
+//        next({
+//          path:'/login'
+//        })
+//      }else{
+//        next();
+//      }
+//   }else{
+//     next();
+//   }
+// });
+export  default  router
+
+

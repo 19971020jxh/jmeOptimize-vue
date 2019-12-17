@@ -1,6 +1,5 @@
 <template>
-  <div class="login" id="login">
-    <a href="javascript:;" class="log-close"><i class="icons close"></i></a>
+  <div class="login" id="login"  >
     <div class="log-bg">
       <div class="log-cloud cloud1"></div>
       <div class="log-cloud cloud2"></div>
@@ -11,7 +10,7 @@
       <div class="log-text">@2019</div>
     </div>
     <div class="log-email">
-      <input type="text" placeholder="Email" :class="'log-input' + (name==''?' log-input-empty':'')" v-model="name">
+      <input type="text" placeholder="name" :class="'log-input' + (name==''?' log-input-empty':'')" v-model="name">
       <input type="password" placeholder="Password" :class="'log-input' + (password==''?' log-input-empty':'')"  v-model="password">
       <a href="javascript:;" class="log-btn" @click="login">Login</a>
     </div>
@@ -34,7 +33,25 @@
         Loading
       },
       methods:{
-
+           login(){
+             this.$axios({
+               method:'get',
+               url:'/loginUser',
+               params:{
+                 name: this.name,
+                 password:this.password
+               }
+             }).then(response=>{
+                if(response.data.login=="T"){
+                   this.$message({
+                     type:'success',message:"登录成功!"
+                   });
+                   sessionStorage.setItem("user",response.data.user);
+                   sessionStorage.setItem("login","T");
+                   this.$router.push({path:'/'})
+                }
+             });
+           }
       }
     }
 </script>

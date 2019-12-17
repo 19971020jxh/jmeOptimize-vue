@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <navbar></navbar>
+
+    <navbar v-if="$route.path!='/login'" ></navbar>
     <router-view/>
   </div>
 </template>
@@ -11,8 +12,9 @@
     name: 'App',
     components:{
     navbar
-    }
-}
+    },
+
+  }
 </script>
 
 <style>

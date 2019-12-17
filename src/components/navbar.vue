@@ -9,10 +9,10 @@
     <el-menu-item index="3" @click="$router.push({ path: '/gongLvJiSuan' })">功率计算</el-menu-item>
     <el-menu-item index="4" @click="$router.push({ path: '/youHua' })">优化</el-menu-item>
     <el-menu-item index="8" @click="$router.push({ path: '/moXingXunLian' })">模型训练</el-menu-item>
-    <el-menu-item index="5" @click="$router.push({ path: '/GuanLi' })">管理</el-menu-item>
+    <el-menu-item index="5" @click="$router.push({ path: '/GuanLi' })"  v-if="adminSee"  >管理</el-menu-item>
     <el-menu-item index="6" @click="$router.push({ path: '/bangZhu' })">帮助</el-menu-item>
     <el-menu-item index="9" @click="$router.push({ path: '/guanYu' })">关于</el-menu-item>
-    <el-menu-item index="7" style="float: right" @click="$router.push({ path: '/tuiChu' })">退出</el-menu-item>
+    <el-menu-item index="7" style="float: right" @click="out">退出</el-menu-item>
   </el-menu>
 </template>
 
@@ -20,7 +20,21 @@
 
     export default {
       name: "navbar",
-
+      data(){
+        return{
+          adminSee:false
+        }
+      },
+     created() {
+     this.adminSee= sessionStorage.getItem('user').role=='管理员' ;
+     },
+      methods:{
+        out(){
+          sessionStorage.removeItem('user');
+          sessionStorage.removeItem('login');
+          this.$router.push({ path: '/login' })
+        }
+    }
     }
 
 </script>

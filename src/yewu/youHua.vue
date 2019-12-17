@@ -106,7 +106,7 @@
             <el-button type="primary">优化</el-button>
             <el-button type="success" @click="showGongKuang" >显示工况</el-button>
             <br/>
-            <el-button type="info" style="margin-top:5px;" @click="$printJS({printable:'printDiv',type:'html' , scanStyles:false,targetStyles:['display','border','text','margin','width']  })" >打印</el-button>
+            <el-button type="info" style="margin-top:5px;" @click="$printJS({printable:'printDiv',type:'html' ,targetStyle:['margin-top','text-align','width','display','margin-left'] })" >打印</el-button>
             <el-button type="warning" style="margin-top:5px;" @click="lastBtn" >{{lastBtnValue}}</el-button>
           </div>
 
@@ -115,8 +115,8 @@
     </el-row>
 
 <!--#&#45;&#45;&#45;&#45;&#45;&#45;打印-&#45;&#45;&#45;&#45;   -->
- <div id="printDiv" style="height:0px;overflow-y: hidden;" >
-        <div style="text-align: center;margin-top: 45px;">
+ <div id="printDiv"    style="height:0px;overflow-y: hidden;" >
+        <div   style="text-align: center;margin-top: 45px;margin-left: 12.5%;">
           <h3>水轮机组经济运行智能系统</h3>
           <h4>优化结果</h4>
         </div>
@@ -127,14 +127,14 @@
           <div style="width: 200px;display: inline-block;margin-left: 12.5%;" >
             部门:产品研发部
           </div>
-          <div style="width: 200px;display: inline-block;margin-left: 12.5%;" >
-            级别
-          </div>
+<!--          <div style="width: 200px;display: inline-block;margin-left: 12.5%;" >-->
+<!--            级别-->
+<!--          </div>-->
           <div style="margin-left: 12.5%;margin-top: 5px;">
             运行条件<br/>
             <div v-for=" item  in JiQis" :key="item" style="margin-top: 5px;">{{item+'号机组:不限制'}}</div>
           </div>
-          <div style="width: 75%;" >
+          <div style="width: 75%;margin-left: 10%;margin-top: 5px;" >
             <el-table
               :data="danJi"
               border
@@ -166,6 +166,7 @@
     <el-dialog
     title="工况"
     :visible.sync="gongKuangDiaLog"
+    custom-class="jxhDialog"
     >
       <el-table
         :data="duoJi"
@@ -265,9 +266,8 @@
     }
 </script>
 
-<style scoped>
-#youhua .el-dialog{
+<style>
+  .jxhDialog{
   width: 95%;
-  margin: 0 auto;
 }
 </style>

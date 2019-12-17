@@ -52,8 +52,11 @@
             label="流量">
           </el-table-column>
         </el-table>
-        <el-button @click="nextRow" >上一条</el-button>
-        <el-button @click="lastRow" >下一条</el-button>
+        <div style="margin-top: 15px;" >
+          <el-button @click="nextRow" >上一条</el-button>
+          <el-button @click="lastRow" >下一条</el-button>
+        </div>
+
       </el-col>
 
       <el-col :span="5" style="margin-left: 15px;margin-top: 15px;">
