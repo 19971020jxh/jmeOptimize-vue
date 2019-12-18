@@ -189,7 +189,7 @@
              this.userList=response.data.userList;
            });
            this.jiQis();
-           this.user=sessionStorage.getItem("user");
+           this.user=JSON.parse(sessionStorage.getItem("user")) ;
          },
         toAdd(){
            this.$axios({

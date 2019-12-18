@@ -55,20 +55,20 @@ const router= new Router({
   ]
 })
 
-// router.beforeEach((to,from,next)=>{
-//   console.log(to)
-//   if(to.name!='login'){
-//      if(sessionStorage.getItem("login")!="T"){
-//        next({
-//          path:'/login'
-//        })
-//      }else{
-//        next();
-//      }
-//   }else{
-//     next();
-//   }
-// });
+router.beforeEach((to,from,next)=>{
+  console.log(to)
+  if(to.name!='login'){
+     if(sessionStorage.getItem("login")!="T"){
+       next({
+         path:'/login'
+       })
+     }else{
+       next();
+     }
+  }else{
+    next();
+  }
+});
 export  default  router
 
 

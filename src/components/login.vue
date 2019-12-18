@@ -46,7 +46,7 @@
                    this.$message({
                      type:'success',message:"登录成功!"
                    });
-                   sessionStorage.setItem("user",response.data.user);
+                   sessionStorage.setItem("user", JSON.stringify(response.data.user ) );
                    sessionStorage.setItem("login","T");
                    this.$router.push({path:'/'})
                 }

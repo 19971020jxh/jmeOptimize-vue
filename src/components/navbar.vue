@@ -26,7 +26,8 @@
         }
       },
      created() {
-     this.adminSee= sessionStorage.getItem('user').role=='管理员' ;
+     this.adminSee=JSON.parse(sessionStorage.getItem('user')).role=='管理员' ;
+     console.log(JSON.parse(sessionStorage.getItem('user')))
      },
       methods:{
         out(){
