@@ -42,7 +42,7 @@
         name: "gongLvJiSuan",
       data() {
         return {
-          jiqi:'',
+          jiqi:1,
           JiQis:[],
           data:[],
           width:'',
@@ -55,7 +55,7 @@
         }
       },
       mounted(){
-        this.width=document.documentElement.clientWidth*0.85;
+        this.width=document.documentElement.clientWidth*0.80;
         this.heigth=window.screen.availHeight-150;
         this.init();
       },
@@ -109,14 +109,16 @@
         },
 
         jiQis(){
-          this.$axios({
-            method:'get',
-            url:'/getjiQis',
-          }).then(response=>{
-            this.JiQis=response.data.jiQis;
-            this.getData(this.JiQis[0]);
-
-          });
+          this.JiQis=[1,2];
+          this.getData(1);
+          // this.$axios({
+          //   method:'get',
+          //   url:'/getjiQis',
+          // }).then(response=>{
+          //   this.JiQis=response.data.jiQis;
+          //   this.getData(this.JiQis[0]);
+          //
+          // });
         },
         getData(jiqi){
           this.$axios({
@@ -130,30 +132,39 @@
             this.jiqi=jiqi;
             for(let key in response.data.data){
               let value=response.data.data[key].map(e=>e.xiaoLvQuXian.map(ss=>parseFloat(ss)));
-              let arry=new Array();arry.push(0);
-              for(let i=0;i<value.length-1;i++){
-                if(value[i][1]-value[i+1][1]>0){
-                  arry.push(i+1);
-                }
-              }
-              arry.push(value.length-1)
-              if(arry.length==2){this.data.push({
+              // -new
+              this.data.push({
                 id: key,
                 type: 'line',
-                smooth: true,
+                smooth: true,// 曲线
+                symbol:'diamond',// 点样式
                 data: value
-              });}
-              else{
-                for(let i=0;i<arry.length-1;i++){
-                  let v=value.slice(arry[i],arry[i+1]);
-                  this.data.push({
-                    id: key+'-'+Number(i)+Number(1),
-                    type: 'line',
-                    smooth: true,
-                    data: v
-                  });
-                }
-              }
+              });
+              //-new
+              // let arry=new Array();arry.push(0);
+              // for(let i=0;i<value.length-1;i++){
+              //   if(value[i][1]-value[i+1][1]>0){
+              //     arry.push(i+1);
+              //   }
+              // }
+              // arry.push(value.length-1)
+              // if(arry.length==2){this.data.push({
+              //   id: key,
+              //   type: 'line',
+              //   smooth: true,
+              //   data: value
+              // });}
+              // else{
+              //   for(let i=0;i<arry.length-1;i++){
+              //     let v=value.slice(arry[i],arry[i+1]);
+              //     this.data.push({
+              //       id: key+'-'+Number(i)+Number(1),
+              //       type: 'line',
+              //       smooth: true,
+              //       data: v
+              //     });
+              //   }
+              // }
             }
 
             this.drawLine();
@@ -168,8 +179,9 @@
           myChart.setOption({
             tooltip: {
               formatter: function (params) {
-                var data = params.data || [0, 0];
-                return data[0].toFixed(2) + ', ' + data[1].toFixed(2);
+                let xiaoLv=params.seriesId//.substring(0,params.seriesId.indexOf('-'))
+                let data = params.data || [0, 0];
+                return '效率:'+xiaoLv+' <br/>出力:'+ data[0].toFixed(2) + ' <br/>水头:' + data[1].toFixed(2);
               }
             },
             grid: {
@@ -180,15 +192,35 @@
             },
             xAxis: {
               type: 'value',
+              name:'出力',
               axisLine: {onZero: false},
-              min:9,
-              maxInterval:1
+              min:0,
+              // maxInterval:1000
             },
             yAxis: {
               type: 'value',
+              name:'水头',
               axisLine: {onZero: true},
-              min:73,
+              min:0,
             },
+            dataZoom:
+              [
+                {
+                  id:'x_dataZoom',
+                  type:'slider',
+                  xAxisIndex:0,
+                  start:0,
+                  end:102
+                },
+                {
+                  id:'y_dataZoom',
+                  type:'slider',
+                  yAxisIndex:0,
+                  orient:'vertical',
+                  start:0,
+                  end:102
+                },
+              ],
             series: this.data
 
           },true);

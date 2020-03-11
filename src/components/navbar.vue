@@ -3,7 +3,9 @@
     mode="horizontal"
     background-color="#545c64"
     text-color="#fff"
-    active-text-color="#ffd04b">
+    active-text-color="#ffd04b"
+    :default-active="1"
+  >
     <el-menu-item index="1" @click="$router.push({ path: '/shuJuWeiHu' })">数据维护</el-menu-item>
     <el-menu-item index="2" @click="$router.push({ path: '/xiaoLvQuXian' })">效率曲线</el-menu-item>
     <el-menu-item index="3" @click="$router.push({ path: '/gongLvJiSuan' })">功率计算</el-menu-item>

@@ -9,12 +9,15 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-      '/':{
-        changeOrigin:true,
-        pathRewrite:{'^/':""}
-      }
-    },
+    // -> 写代码
+    proxyTable: {},
+    // -> 打包
+    // proxyTable: {
+    //   '/':{
+    //     changeOrigin:true,
+    //     pathRewrite:{'^/':""}
+    //   }
+    // },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
@@ -53,8 +56,8 @@ module.exports = {
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsSubDirectory: '',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

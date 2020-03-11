@@ -61,14 +61,14 @@ router.beforeEach((to,from,next)=>{
      if(sessionStorage.getItem("login")!="T"){
        next({
          path:'/login'
-       })
-     }else{
+ })
+ } else {
        next();
      }
-  }else{
+  } else {
     next();
   }
 });
-export  default  router
+export default router
 
 
