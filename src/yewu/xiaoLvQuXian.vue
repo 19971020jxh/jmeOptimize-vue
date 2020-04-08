@@ -1,10 +1,13 @@
 <template>
   <div>
-   <div style="margin-top: 20px;margin-left: 145px;display: inline-block">机组效率曲线</div>
-   <el-radio-group v-model="jiqi"   size="mini"   @change="getData(jiqi)" style="margin-left: 15px;">
-    <el-radio-button :label="item" v-for=" item in JiQis" :key="item" >{{item+'号机组'}}</el-radio-button>
-  </el-radio-group>
-  <div id="myChart" :style="{width: width+'px', height: heigth+'px'}"></div>
+<!--  old version 4/8   -->
+<!--   <div style="margin-top: 20px;margin-left: 145px;display: inline-block">机组效率曲线</div>-->
+<!--   <el-radio-group v-model="jiqi"   size="mini"   @change="getData(jiqi)" style="margin-left: 15px;">-->
+<!--    <el-radio-button :label="item" v-for=" item in JiQis" :key="item" >{{item+'号机组'}}</el-radio-button>-->
+<!--  </el-radio-group>-->
+<!--  <div id="myChart" :style="{width: width+'px', height: heigth+'px'}"></div>-->
+<!--  old version 4/8   -->
+
   </div>
 </template>
 
@@ -32,9 +35,15 @@
       },
       methods: {
         init(){
-        //  this.jiQis();
-          this.JiQis=[1,2];
-          this.getData(1);
+          // 特征曲线窗口
+          this.curve();
+
+         // old version 4/8
+        //  this.JiQis=[1,2];
+        //  this.getData(1);
+        },
+        curve(){
+          this.$axios({method:'get',url:'curve'});
         },
         jiQis(){
           this.$axios({
