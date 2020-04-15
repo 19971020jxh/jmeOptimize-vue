@@ -1,36 +1,42 @@
 <template>
   <div>
     <div style="margin-top: 20px;margin-left: 145px;display: inline-block">机组</div>
-    <el-radio-group v-model="jiqi"   size="mini"   @change="getData(jiqi)" style="margin-left: 15px;">
-      <el-radio-button :label="item" v-for=" item in JiQis" :key="item" >{{item+'号机组'}}</el-radio-button>
+    <!--                    @change="getData(jiqi)" -->
+    <el-radio-group v-model="jiqi"   size="mini"
+
+                    style="margin-left: 15px;">
+      <el-radio-button :label="1" :key="1" >{{'1号机组'}}</el-radio-button>
+      <el-radio-button :label="2" :key="2" >{{'2号机组'}}</el-radio-button>
     </el-radio-group>
 
-    <el-row>
-      <el-col :span="20">
-        <div id="myChart" :style="{width: width+'px', height: heigth+'px'}"></div>
-      </el-col>
-      <el-col :span="4">
-        <div style=" margin-top: 55px;margin-left: 15px;">
-          <el-form :inline="true" :model="nowSelect"  >
-            <el-form-item label="工作水头">
-              <el-input-number v-model="nowSelect.shuitou" :step="1" ></el-input-number>
-            </el-form-item>
-            <el-form-item label="引用流量">
-              <el-input-number v-model="nowSelect.liuLiang" :step="1" ></el-input-number>
-            </el-form-item>
-            <el-form-item label="机组出力">
-              <el-input v-model="nowSelect.chuli"  ></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="chaXun">确定</el-button>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="warning" @click="showGongKuang">显示工况</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-col>
-    </el-row>
+    <el-button type="primary" @click="chuLi">确定</el-button>
+
+<!--    <el-row>-->
+<!--      <el-col :span="20">-->
+<!--        <div id="myChart" :style="{width: width+'px', height: heigth+'px'}"></div>-->
+<!--      </el-col>-->
+<!--      <el-col :span="4">-->
+<!--        <div style=" margin-top: 55px;margin-left: 15px;">-->
+<!--          <el-form :inline="true" :model="nowSelect"  >-->
+<!--            <el-form-item label="工作水头">-->
+<!--              <el-input-number v-model="nowSelect.shuitou" :step="1" ></el-input-number>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="引用流量">-->
+<!--              <el-input-number v-model="nowSelect.liuLiang" :step="1" ></el-input-number>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="机组出力">-->
+<!--              <el-input v-model="nowSelect.chuli"  ></el-input>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item>-->
+<!--              <el-button type="primary" @click="chaXun">确定</el-button>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item>-->
+<!--              <el-button type="warning" @click="showGongKuang">显示工况</el-button>-->
+<!--            </el-form-item>-->
+<!--          </el-form>-->
+<!--        </div>-->
+<!--      </el-col>-->
+<!--    </el-row>-->
 
 
 
@@ -64,7 +70,11 @@
       },
       methods: {
         init(){
-          this.jiQis();
+          this.chuLi();
+          // this.jiQis();
+        },
+        chuLi(){
+          this.$axios({method:'get',url:'chuLi',params:{'jiqi':this.jiqi}});
         },
         showGongKuang(){
           // ->显示工况

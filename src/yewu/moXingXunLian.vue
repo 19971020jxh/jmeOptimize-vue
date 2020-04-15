@@ -87,7 +87,8 @@
               yangBen:'',
               ciShu:'',
               wuCha:'',
-              jiqi:''
+              jiqi:'',
+              pageName:'',
             },
             JiQis:[],
             jiqi:1,
@@ -103,6 +104,8 @@
       methods:{
         init(){
          // this.jiQis();
+        // -> 出力模型页面 还是 耗流量模型页面.
+        this.form.pageName=  this.$route.params.name;
         },
         niHe(){
           this.form.jiqi=this.jiqi;
@@ -121,7 +124,7 @@
           this.$axios({
             method:'post',
             url:'SaveModel',
-            data:{'jiqi':this.jiqi},
+            data:{'jiqi':this.jiqi,'pageName':this.pageName},
           }).then(response=>{
             this.$message('操作成功!')
           })
@@ -130,7 +133,7 @@
             this.$axios({
               method:'post',
               url:'data_process',
-              data:{'jiqi':this.jiqi},
+              data:{'jiqi':this.jiqi,'pageName':this.pageName},
             }).then(response=>{
                this.$message('模型重新训练成功!')
             })

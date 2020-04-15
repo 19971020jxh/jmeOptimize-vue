@@ -10,7 +10,11 @@
     <el-menu-item index="2" @click="$router.push({ path: '/xiaoLvQuXian' })">效率曲线</el-menu-item>
     <el-menu-item index="3" @click="$router.push({ path: '/gongLvJiSuan' })">功率计算</el-menu-item>
     <el-menu-item index="4" @click="$router.push({ path: '/youHua' })">优化</el-menu-item>
-    <el-menu-item index="8" @click="$router.push({ path: '/moXingXunLian' })">模型训练</el-menu-item>
+    <el-submenu  index="8" >
+      <template slot="title">机器模型</template>
+      <el-menu-item index="8-1" @click="$router.push({ name: 'moXingXunLian',params:{name:'chuLi'}})">出力模型</el-menu-item>
+      <el-menu-item index="8-2" @click="$router.push({ name: 'moXingXunLian',params:{name:'liuLiang'}})">耗流量模型</el-menu-item>
+    </el-submenu>
     <el-menu-item index="5" @click="$router.push({ path: '/GuanLi' })"  v-if="adminSee"  >管理</el-menu-item>
     <el-menu-item index="6" @click="$router.push({ path: '/bangZhu' })">帮助</el-menu-item>
     <el-menu-item index="9" @click="$router.push({ path: '/guanYu' })">关于</el-menu-item>

@@ -64,14 +64,15 @@
           <el-button @click="nextRow" >上一条</el-button>
           <el-button @click="lastRow" >下一条</el-button>
         </div>
-
       </el-col>
 
       <el-col :span="5" style="margin-left: 15px;margin-top: 15px;">
         <el-card class="box-card">
           <el-radio-group v-model="jiqi"   size="mini"   @change="getData(jiqi)" style="margin-left: 15px;">
-            <el-radio :label="1"   :key="1" style="margin:15px;">{{1+'号机组'}}</el-radio><br/>
-            <el-radio :label="2"   :key="2" style="margin:15px;">{{2+'号机组'}}</el-radio><br/>
+            <el-radio   :label="1"  :key="1" style="margin:15px;">{{1+'号机组'}}</el-radio><br/>
+            <el-radio   :label="2"   :key="2" style="margin:15px;">{{2+'号机组'}}</el-radio><br/>
+            <el-radio   :label="31"  :key="31" style="margin:15px;">{{3+'号机组大水轮'}}</el-radio>
+            <el-radio   :label="32"  :key="32" style="margin:15px;">{{3+'号机组小水轮'}}</el-radio>
           </el-radio-group>
         </el-card>
         <el-card class="box-card" style="margin-top: 15px;text-align: center">
@@ -97,7 +98,6 @@
       </el-upload>
       <el-button size="small" type="warning"   @click="excel" >下载excel[已选择机器{{jiqi}}]</el-button>
     </el-dialog>
-
   </div>
 </template>
 
@@ -125,8 +125,18 @@
       },
       created(){
       this.init();
+      window.addEventListener('beforeunload',   this.closeKeep())
       },
+      destroyed(){
+        window.removeEventListener('beforeunload',   this.closeKeep())
+      },
+
       methods:{
+        closeKeep(){
+           if(this.needKeep!=0){
+             this.keep();
+           }
+        },
         beforeUpload(file){
           let formData = new FormData();
           formData.append('file',file);
@@ -165,6 +175,12 @@
           }
           if(this.jiqi==2){
             url='keep_2'
+          }
+          if(this.jiqi==31){
+            url='keep_31';
+          }
+          if(this.jiqi==32){
+            url='keep_32';
           }
           const loading = this.$loading({
             lock: true,
