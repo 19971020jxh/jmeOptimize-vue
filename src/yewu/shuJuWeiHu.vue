@@ -79,25 +79,25 @@
           <el-button  @click="add" size="medium" :type="addColor" style="margin-bottom: 5px;">{{addName}}</el-button><br/>
           <el-button  @click="update" size="medium" :type="updateColor" style="margin-bottom: 5px;">{{updateName}}</el-button><br/>
           <el-button  @click="Jdelete" size="medium" :type="deleteColor" style="margin-bottom: 5px;">{{deleteName}}</el-button><br/>
-          <el-button  @click="keep()" size="medium" :type="needKeep==0?'warning':'danger'" style="margin-bottom: 5px;">{{needKeep==0?'保存':'点击保存'}}</el-button><br/>
-          <el-button  @click="batchDialog=true" size="medium"   style="margin-bottom: 5px;">批量</el-button><br/>
+<!--          <el-button  @click="keep()" size="medium" :type="needKeep==0?'warning':'danger'" style="margin-bottom: 5px;">{{needKeep==0?'保存':'点击保存'}}</el-button><br/>-->
+          <el-button  @click="daoChu" size="medium" type="warning"   style="margin-bottom: 5px;">导出</el-button><br/>
         </el-card>
       </el-col>
     </el-row>
     </div>
 
-    <el-dialog title="批量操作" :visible.sync="batchDialog">
-      <el-upload
-       :action="1000"
-       :before-upload="beforeUpload"
-       accept="xlsx,xls"
-      >
-        <el-tooltip class="item" effect="dark" content="excel格式:ID|xiaoLv|ShuiTou|ChuLi|LiuLiang" placement="top-start">
-        <el-button size="small" type="primary">上传excel[批量添加]</el-button>
-        </el-tooltip>
-      </el-upload>
-      <el-button size="small" type="warning"   @click="excel" >下载excel[已选择机器{{jiqi}}]</el-button>
-    </el-dialog>
+<!--    <el-dialog title="批量操作" :visible.sync="batchDialog">-->
+<!--      <el-upload-->
+<!--       :action="1000"-->
+<!--       :before-upload="beforeUpload"-->
+<!--       accept="xlsx,xls"-->
+<!--      >-->
+<!--        <el-tooltip class="item" effect="dark" content="excel格式:ID|xiaoLv|ShuiTou|ChuLi|LiuLiang" placement="top-start">-->
+<!--        <el-button size="small" type="primary">上传excel[批量添加]</el-button>-->
+<!--        </el-tooltip>-->
+<!--      </el-upload>-->
+<!--      <el-button size="small" type="warning"   @click="excel" >下载excel[已选择机器{{jiqi}}]</el-button>-->
+<!--    </el-dialog>-->
   </div>
 </template>
 
@@ -111,7 +111,7 @@
             JiQis:[],
             data:[],
             jiqi:1,
-            batchDialog:false,
+            // batchDialog:false,
             rowHeight:40,
             addNumber:0,
             addName:'新增',
@@ -130,7 +130,6 @@
       destroyed(){
         window.removeEventListener('beforeunload',   this.closeKeep())
       },
-
       methods:{
         closeKeep(){
            if(this.needKeep!=0){
@@ -214,18 +213,27 @@
             this.getDelete();
           })
         },
+        daoChu(){
+          this.$axios({
+            method:'get',
+            url:'/daoChu',
+            params:{jiqi:this.jiqi},
+          }).then(response => {
+            this.$message('当前机器数据导出成功');
+          })
+        },
         getDelete(){
-          // this.nowSelect.jiqi=this.jiqi;
-          // this.$axios({
-          //   method:'get',
-          //   url:'/getDelete',
-          //   params:this.nowSelect,
-          // }).then(response=>{
+          this.nowSelect.jiqi=this.jiqi;
+          this.$axios({
+            method:'get',
+            url:'/getDelete',
+            params:this.nowSelect,
+          }).then(response=>{
             this.$message('删除成功');
             this.data.splice(this.data.indexOf(this.nowSelect),1);
             this.nowSelect={};
             this.needKeep=1;
-        //  })
+         })
         },
         update(){
           if(this.validate()){
@@ -234,16 +242,16 @@
           this.getUpdate();
         },
         getUpdate(){
-          // this.nowSelect.jiqi=this.jiqi;
-          // this.$axios({
-          //   method:'get',
-          //   url:'/getUpdate',
-          //   params:this.nowSelect,
-          // }).then(response=>{
+          this.nowSelect.jiqi=this.jiqi;
+          this.$axios({
+            method:'get',
+            url:'/getUpdate',
+            params:this.nowSelect,
+          }).then(response=>{
             this.$message('修改成功');
-           // this.data[this.data.indexOf(response.data.old)]=this.nowSelect;
+            this.data[this.data.indexOf(response.data.old)]=this.nowSelect;
             this.needKeep=1;
-        //  });
+         });
         },
         add(){
           if(this.addNumber==0){
@@ -283,13 +291,13 @@
           return  false;
         },
         getAdd(){
-          // this.nowSelect.jiqi=this.jiqi;
-          // console.log(this.nowSelect)
-          // this.$axios({
-          //   method:'get',
-          //   url:'/addData',
-          //   params: this.nowSelect,
-          // }).then(response=>{
+          this.nowSelect.jiqi=this.jiqi;
+          console.log(this.nowSelect)
+          this.$axios({
+            method:'get',
+            url:'/addData',
+            params: this.nowSelect,
+          }).then(response=>{
             this.$message('添加成功!');
             this.data.push(this.nowSelect);
             this.addColor='primary';
@@ -297,7 +305,7 @@
             this.nowSelect={};
             this.$refs.table.bodyWrapper.scrollTop=this.$refs.table.bodyWrapper.scrollHeight;
             this.needKeep=1;
-          // })
+          })
         },
         getData(jiqi){
           this.$axios({

@@ -47,39 +47,52 @@
           <el-button @click="dialogAddUser=true">新增用户</el-button>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="机器管理" name="second">
-        <h4>当前机器:</h4>
-        <el-tag
-          v-for="item in JiQis"
-          :key="item"
-          closable
-          @close="deletJiQi(item)"
-          style="margin-right: 15px;"
-        >
-          {{item+'号机器'}}
-        </el-tag>
-        <h4>新增机器:</h4>
-        <el-button type="primary" @click="showJiQiAdd=true" >新增机器</el-button>
-      </el-tab-pane>
+<!--      <el-tab-pane label="机器管理" name="second">-->
+<!--        <h4>当前机器:</h4>-->
+<!--        <el-tag-->
+<!--          v-for="item in JiQis"-->
+<!--          :key="item"-->
+<!--          closable-->
+<!--          @close="deletJiQi(item)"-->
+<!--          style="margin-right: 15px;"-->
+<!--        >-->
+<!--          {{item+'号机器'}}-->
+<!--        </el-tag>-->
+<!--        <h4>新增机器:</h4>-->
+<!--        <el-button type="primary" @click="showJiQiAdd=true" >新增机器</el-button>-->
+<!--      </el-tab-pane>-->
       <el-tab-pane label="数据管理" name="three">
+        <el-radio-group v-model="jiqi"   size="mini"   @change="getData(jiqi)" style="margin-left: 15px;">
+          <el-radio   :label="1"  :key="1" style="margin:15px;">{{1+'号机组'}}</el-radio>
+          <el-radio   :label="2"   :key="2" style="margin:15px;">{{2+'号机组'}}</el-radio>
+          <el-radio   :label="31"  :key="31" style="margin:15px;">{{3+'号机组大水轮'}}</el-radio>
+          <el-radio   :label="32"  :key="32" style="margin:15px;">{{3+'号机组小水轮'}}</el-radio>
+        </el-radio-group><br/>
+        <el-upload
+          action="1000"
+          :before-upload="uploadExcel"
+        >
+          <el-button size="small" type="primary">上传数据</el-button>
+        </el-upload>
         <el-tooltip class="item" effect="dark" content="该操作会清空全部机器数据!" placement="right">
-        <el-button type="danger"
-        @click="()=>{  $confirm('此操作将永久删除机器数据, 是否继续?', '提示', {
-                  confirmButtonText: '确定',
-                  cancelButtonText: '取消',
-                  type: 'warning'
-                }).then(() => {
-                  $axios({
-                  method:'post',
-                  url:'/deleteAll',
-                  }).then(response=>{
-                   this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                  });
-                  });
-                }) }"
-                   plain>清空数据</el-button>
+<!--        <el-button type="danger"-->
+<!--        @click="()=>{  $confirm('此操作将永久删除机器数据, 是否继续?', '提示', {-->
+<!--                  confirmButtonText: '确定',-->
+<!--                  cancelButtonText: '取消',-->
+<!--                  type: 'warning'-->
+<!--                }).then(() => {-->
+<!--                  $axios({-->
+<!--                  method:'post',-->
+<!--                  url:'/deleteAll',-->
+<!--                  }).then(response=>{-->
+<!--                   this.$message({-->
+<!--                    type: 'success',-->
+<!--                    message: '删除成功!'-->
+<!--                  });-->
+<!--                  });-->
+<!--                }) }"-->
+<!--                   plain>清空数据</el-button>-->
+
         </el-tooltip>
       </el-tab-pane>
     </el-tabs>
@@ -154,10 +167,12 @@
 </template>
 
 <script>
+    import  axios from 'axios'
     export default {
         name: "GuanLi",
       data(){
           return{
+            jiqi:1,
             tab:"first",
             nowSelect:{},
             newJiQi:[],
@@ -190,6 +205,15 @@
            });
            this.jiQis();
            this.user=JSON.parse(sessionStorage.getItem("user")) ;
+         },
+         uploadExcel(file){
+          let formData = new FormData();
+          formData.append('file',file);
+          formData.append('jiqi',this.jiqi);
+          axios.post('/uploadExcel',formData).then((res)=>{
+            this.$message('机组数据上传成功');
+          });
+          return false;
          },
         toAdd(){
            this.$axios({
