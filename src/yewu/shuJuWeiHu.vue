@@ -219,7 +219,7 @@
             url:'/daoChu',
             params:{jiqi:this.jiqi},
           }).then(response => {
-            this.$message('当前机器数据导出成功');
+            this.$message('当前机器数据导出成功,请在JZ_From_Databases目录查看！');
           })
         },
         getDelete(){

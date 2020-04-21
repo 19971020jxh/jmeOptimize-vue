@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top: 45px;margin-left: 15%;">
 <!--  old version 4/8   -->
 <!--   <div style="margin-top: 20px;margin-left: 145px;display: inline-block">机组效率曲线</div>-->
 <!--   <el-radio-group v-model="jiqi"   size="mini"   @change="getData(jiqi)" style="margin-left: 15px;">-->
@@ -7,7 +7,13 @@
 <!--  </el-radio-group>-->
 <!--  <div id="myChart" :style="{width: width+'px', height: heigth+'px'}"></div>-->
 <!--  old version 4/8   -->
-
+     <h4>查看效率曲线</h4>
+    <el-radio v-model="jiqi" label="1">机器1</el-radio>
+    <el-radio v-model="jiqi" label="2">机器2</el-radio>
+    <el-radio v-model="jiqi" label="31">机器3大齿轮</el-radio>
+    <el-radio v-model="jiqi" label="32">机器3小齿轮</el-radio>
+    <br/><br/><br/>
+    <el-button @click="quXian" type="primary">确定</el-button>
   </div>
 </template>
 
@@ -17,7 +23,7 @@
       name: "xiaoLvQuXian",
       data() {
         return {
-        jiqi:1,
+        jiqi:'1',
         JiQis:[],
         data:[],
         width:'',
@@ -41,6 +47,21 @@
          // old version 4/8
         //  this.JiQis=[1,2];
         //  this.getData(1);
+        },
+        quXian(){
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
+          this.$axios({
+             method:'get',
+             url:'curve',
+             params: {'jiqi':this.jiqi},
+          }).then(response=>{
+            loading.close();
+          })
         },
         curve(){
           this.$axios({method:'get',url:'curve'});

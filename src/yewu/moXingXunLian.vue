@@ -2,14 +2,21 @@
     <div style="width: 75%;margin: 15px auto;">
       <el-row :gutter="20">
         <el-col :span="19">
-          <label >训练样本文件</label>
-          <span>{{this.filePath}}</span>
-          <el-upload
-            action="1000"
-            :before-upload="beforeUpload"
-            :auto-upload="false">
-            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-          </el-upload>
+          <label >训练样本文件</label><br/>
+          <div  style="margin: 5px;">
+            <small >文件目录： {{this.filePath}}</small><br/>
+          </div>
+          <input type="file"  @change="importf" />
+
+<!--          <el-upload-->
+<!--            action="1000"-->
+<!--            :before-upload="beforeUpload"-->
+<!--            :auto-upload="false"-->
+<!--            ref="upload"-->
+<!--            :on-change="importf"-->
+<!--           >-->
+<!--            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>-->
+<!--          </el-upload>-->
 
 
 <!--          <el-upload-->
@@ -42,6 +49,53 @@
             </el-form-item>
           </el-form>
 
+<!--          // -&#45;&#45; 表格 &#45;&#45;&#45;&#45;-->
+          <el-table
+            :data="excelData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+            style="width: 100%"
+          >
+            <el-table-column
+              v-for="(item,key,index) in excelData[0]"
+              :key="index"
+              :prop="key"
+              :label="key"
+              width="180"
+            ></el-table-column>
+          </el-table>
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[15, 20, 30, 40]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="excelData.length"
+          >
+          </el-pagination>
+
+<!--          .slice((currentPage-1)*pageSize,currentPage*pageSize)-->
+<!--          <div >-->
+<!--          <el-table :data="excelData"  >-->
+<!--            <el-table-column prop="ID" label="数据组" width="140"></el-table-column>-->
+<!--            <el-table-column prop="XiaoLv" label="效率" width="120"></el-table-column>-->
+<!--            <el-table-column prop="ShuiTou" label="水头"></el-table-column>-->
+<!--            <el-table-column prop="ChuLi" label="出力"></el-table-column>-->
+<!--            <el-table-column prop="LiuLiang" label="流量"></el-table-column>-->
+<!--          </el-table>-->
+<!--          <div>-->
+<!--            <el-pagination-->
+<!--              @current-change="currentChange"-->
+<!--              layout="prev, pager, next"-->
+<!--              :page-size="pageSize"-->
+<!--              :total="excelData.length">-->
+<!--            </el-pagination>-->
+
+
+<!--          -->
+<!--          </div>-->
+<!--          </div>-->
+<!--          // -&#45;&#45; 表格 &#45;&#45;&#45;&#45;-->
+
         </el-col>
         <el-col :span="5">
           <el-card class="box-card">
@@ -67,11 +121,19 @@
 </template>
 
 <script>
+
+
+
+  import XLSX from 'xlsx'
   import  axios from 'axios'
     export default {
         name: "moXingXunLian",
       data(){
           return{
+
+            currentPage:1,
+            pageSize:15,
+            tableData:[],
             file:[],
             form:{
               yuanShu:'',
@@ -93,13 +155,34 @@
             },
             filePath:'',
             fileName:'',
-            formData:new FormData()
+            formData:new FormData(),
+            excelData:[],
           }
       },
       created(){
         this.init();
       },
+      // mounted(){
+      //   this.$refs.upload.addEventListener('change', e => {//绑定监听表格导入事件
+      //     this.readExcel(e);
+      //   })
+      // },
       methods:{
+        handleSizeChange: function(size) {
+          this.pagesize = size;
+          console.log(this.pagesize); //每页下拉显示数据
+        },
+        handleCurrentChange: function(currentPage) {
+          this.currentPage = currentPage;
+          console.log(this.currentPage); //点击第几页
+        },
+
+
+        currentChange(currentPage){
+          this.currentPage = currentPage;
+        },
+
+
   init(){
          // this.jiQis();
         // -> 出力模型页面 还是 耗流量模型页面.
@@ -166,7 +249,7 @@
             })
         },
 
-       beforeUpload(){
+       beforeUpload(file){
           // this.$confirm('此操作将清除机器'+this.jiqi+'原有数据', '提示', {
           //   confirmButtonText: '确定',
           //   cancelButtonText: '取消',
@@ -181,6 +264,7 @@
          // });
 
        },
+
         jiQis(){
           this.$axios({
             method:'get',
@@ -190,9 +274,47 @@
           });
         },
 
+
+
+        importf(obj) {
+          //导入
+          if (!obj.target.files) {
+            return;
+          }
+          var f =obj.target.files[0];
+          this.beforeUpload(f);
+          console.log(f);
+          var reader = new FileReader();
+          var result = [];
+          let that=this;
+          reader.onload = function(e) {
+            var data = e.target.result;
+            //获取xlsx对象
+            var workbook = XLSX.read(data, {
+              type: "binary"
+            });
+           let list=  XLSX.utils.sheet_to_json(
+              workbook.Sheets[workbook.SheetNames[0]]
+            );
+           this.excelData=[];
+           list.forEach((item,index)=>{
+             that.excelData.push(item);
+            });
+
+          };
+          reader.readAsBinaryString(f);
+
+
+        }
+
+
       },
 
     }
+
+
+
+
 </script>
 
 <style scoped>

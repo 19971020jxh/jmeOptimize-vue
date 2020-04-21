@@ -7,9 +7,11 @@
                     style="margin-left: 15px;">
       <el-radio-button :label="1" :key="1" >{{'1号机组'}}</el-radio-button>
       <el-radio-button :label="2" :key="2" >{{'2号机组'}}</el-radio-button>
+      <el-radio-button :label="31" :key="31" >{{'3号机组大齿轮'}}</el-radio-button>
+      <el-radio-button :label="32" :key="32" >{{'3号机组小齿轮'}}</el-radio-button>
     </el-radio-group>
 
-    <el-button type="primary" @click="chuLi">确定</el-button>
+    <el-button type="primary" size="small" @click="chuLi">确定</el-button>
 
 <!--    <el-row>-->
 <!--      <el-col :span="20">-->
